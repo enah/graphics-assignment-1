@@ -1,4 +1,3 @@
-
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -163,7 +162,7 @@ void shade(float centerX, float centerY, float radius) {
             
             float dist = sqrt(sqr(x) + sqr(y));            
             if (dist <= radius) {
-                float z = sqrt(radius*radius-dist*dist);
+                float z = sqrt(sqr(radius) - sqr(dist));
                 
                 r_final = g_final = b_final = 0;
                 
