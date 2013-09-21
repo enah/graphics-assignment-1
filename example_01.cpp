@@ -21,7 +21,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h> // causing compilation error
+#include <stdlib.h> // causing compilation error on instructional machines
 
 #define PI 3.14159265  // Should be used from mathlib
 inline float sqr(float x) { return x*x; }
