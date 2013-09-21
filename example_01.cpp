@@ -19,7 +19,9 @@
 
 #include <time.h>
 #include <math.h>
-
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h> // causing compilation error
 
 #define PI 3.14159265  // Should be used from mathlib
 inline float sqr(float x) { return x*x; }
@@ -300,6 +302,33 @@ int main(int argc, char *argv[]) {
     dl_color[1][1] = 1;
     dl_color[1][2] = 1;
 
+
+    int n = 1;
+
+    while (n < argc) {
+    	if (strncmp(argv[n], "-ka", 3)) {
+    	    ka[0] = atof(argv[++n]);
+    	    ka[1] = atof(argv[++n]);
+    	    ka[3] = atof(argv[++n]);
+    	} else if (strncmp(argv[n], "-kd", 3)) {
+    	    kd[0] = atof(argv[++n]);
+    	    kd[1] = atof(argv[++n]);
+    	    kd[2] = atof(argv[++n]);
+    	} else if (strncmp(argv[n], "-ks", 3)) {
+    	    ks[0] = atof(argv[++n]);
+    	    ks[1] = atof(argv[++n]);
+    	    ks[2] = atof(argv[++n]);
+    	} else if (strncmp(argv[n], "-sp", 3)) {
+    	    sp = atof(argv[++n]);
+    	} else if (strncmp(argv[n], "-pl", 3)) {
+
+    	} else if (strncmp(argv[n], "-dl", 3)) {
+
+    	} else {
+
+    	}
+    	n++;
+    }
     
   //This initializes glut
   glutInit(&argc, argv);
