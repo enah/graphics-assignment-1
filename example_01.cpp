@@ -266,13 +266,13 @@ int main(int argc, char *argv[]) {
     ks[0] = 0.5;
     ks[1] = 0.5;
     ks[2] = 0.5;
-    sp = 2;
+    sp = 200;
     
     ka[0] = 0.01;
-    ka[1] = 0.01;
+    ka[1] = 0.03;
     ka[2] = 0.01;
     
-    pl_num = 1;
+    pl_num = 2;
     pl_pos[0][0] = 1;
     pl_pos[0][1] = 1;
     pl_pos[0][2] = 1;
@@ -287,7 +287,7 @@ int main(int argc, char *argv[]) {
     pl_color[1][1] = 1;
     pl_color[1][2] = 1;
     
-    dl_num = 1;
+    dl_num = 2;
     dl_dir[0][0] = -1;
     dl_dir[0][1] = -1;
     dl_dir[0][2] = -1;
@@ -321,11 +321,23 @@ int main(int argc, char *argv[]) {
     	} else if (strncmp(argv[n], "-sp", 3)) {
     	    sp = atof(argv[++n]);
     	} else if (strncmp(argv[n], "-pl", 3)) {
-
+	    pl_pos[pl_num][0] = atof(argv[++n]);
+	    pl_pos[pl_num][1] = atof(argv[++n]);
+	    pl_pos[pl_num][2] = atof(argv[++n]);
+	    pl_color[pl_num][0] = atof(argv[++n]);
+	    pl_color[pl_num][1] = atof(argv[++n]);
+	    pl_color[pl_num][2] = atof(argv[++n]);
+	    pl_num++;
     	} else if (strncmp(argv[n], "-dl", 3)) {
-
+	    dl_pos[dl_num][0] = atof(argv[++n]);
+	    dl_pos[dl_num][1] = atof(argv[++n]);
+	    dl_pos[dl_num][2] = atof(argv[++n]);
+	    dl_color[dl_num][0] = atof(argv[++n]);
+	    dl_color[dl_num][1] = atof(argv[++n]);
+	    dl_color[dl_num][2] = atof(argv[++n]);
+	    dl_num++;
     	} else {
-
+	    return;
     	}
     	n++;
     }
