@@ -329,15 +329,16 @@ int main(int argc, char *argv[]) {
 	    pl_color[pl_num][2] = atof(argv[++n]);
 	    pl_num++;
     	} else if (strncmp(argv[n], "-dl", 3)) {
-	    dl_pos[dl_num][0] = atof(argv[++n]);
-	    dl_pos[dl_num][1] = atof(argv[++n]);
-	    dl_pos[dl_num][2] = atof(argv[++n]);
+	    dl_dir[dl_num][0] = atof(argv[++n]);
+	    dl_dir[dl_num][1] = atof(argv[++n]);
+	    dl_dir[dl_num][2] = atof(argv[++n]);
 	    dl_color[dl_num][0] = atof(argv[++n]);
 	    dl_color[dl_num][1] = atof(argv[++n]);
 	    dl_color[dl_num][2] = atof(argv[++n]);
 	    dl_num++;
     	} else {
-	    return;
+	    // something went wrong
+	    return 0;
     	}
     	n++;
     }
