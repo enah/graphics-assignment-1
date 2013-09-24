@@ -438,7 +438,7 @@ int main(int argc, char *argv[]) {
     
     shape = SPHERE;
     multiple = false;
-    mul_num = 0;
+    mul_num = 200;
     toon = false;
     
     int n = 1;
