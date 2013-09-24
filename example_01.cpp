@@ -1,4 +1,3 @@
-
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -495,7 +494,7 @@ int main(int argc, char *argv[]) {
         // r1: radius of sphere 1
         // ex: -ml 3 -0.5 0 0.4 0.5 0.3 0.2 0.5 -0.3 0.2
         // p.s. the radius of the first sphere would be used as unit length
-        else if (!strcmp(argv[n], "-ms")) {
+        else if (!strcmp(argv[n], "-ml")) {
             multiple = true;
             mul_num = atof(argv[++n]);
             for (int i = 0; i < mul_num; i++) {
