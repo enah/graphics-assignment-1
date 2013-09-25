@@ -479,7 +479,7 @@ int windowDump(void)
    // }
 
    /* Clean up */
-   counter++;
+   //counter++;
    free(image);
    return(1);
 }
