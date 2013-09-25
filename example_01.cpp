@@ -238,6 +238,7 @@ void shade(float centerX, float centerY, float radius, int shape) {
                     g_final += ka[1] * dl_color[idx][1];
                     b_final += ka[2] * dl_color[idx][2];
                 }
+                // why is this here twice?
                 if (toon) {
                     r_final = float(int(r_final*10)) / 10;
                     g_final = float(int(g_final*10)) / 10;
