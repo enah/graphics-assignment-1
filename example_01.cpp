@@ -56,6 +56,11 @@ int dl_num;
 float dl_dir[5][3];
 float dl_color[5][3];
 
+bool an_bool;
+bool as_bool;
+float an[3];
+float as[3];
+
 enum SHAPE { SPHERE, CUBE };
 
 bool toon;
@@ -151,6 +156,11 @@ void setPixel(int x, int y, GLfloat r, GLfloat g, GLfloat b) {
   glEnd();
 }*/
 
+// not correct as of now
+float find_ani_sp(int id, float x, float y, float z) {
+    return as[0]*pl_pos[id][1]*z + as[1]*pl_pos[id][2]*x + as[2]*pl_pos[id][0]*y - as[0]*pl_pos[id][2]*y - as[1]*pl_pos[id][0]*z - as[2]*pl_pos[id][1]*x;
+}
+
 void shade(float centerX, float centerY, float radius, int shape) {
     
     glBegin(GL_POINTS);
@@ -171,6 +181,9 @@ void shade(float centerX, float centerY, float radius, int shape) {
             float z;
             float cos_theta;
             float specular;
+	    float sp_mod;
+	    float refl_dir;
+	    float anisotropic;
             
             float dist = sqrt(sqr(x) + sqr(y));            
             if (shape == SPHERE && dist <= radius || shape == CUBE) {
@@ -195,12 +208,18 @@ void shade(float centerX, float centerY, float radius, int shape) {
                     r_final += kd[0] * max(0.0f, cos_theta) * pl_color[idx][0];
                     g_final += kd[1] * max(0.0f, cos_theta) * pl_color[idx][1];
                     b_final += kd[2] * max(0.0f, cos_theta) * pl_color[idx][2];
-                    
+
+		    sp_mod = sp;
+
+		    if (as_bool) {
+			sp_mod = find_ani_sp(idx, radius-x, raidus-y, radius-z);
+		    }
                     // specular part
                     if (shape == SPHERE)
-                        specular = pow(max(0.0f, -pl_d[2]/pl_d_sum + 2*cos_theta*z/radius), sp);
+			refl_dir = 
+                        specular = pow(max(0.0f, -pl_d[2]/pl_d_sum + 2*cos_theta*z/radius), sp_mod);
                     else
-                        specular = pow(max(0.0f, cos_theta), sp);
+                        specular = pow(max(0.0f, cos_theta), sp_mod);
                     r_final += ks[0] * specular * pl_color[idx][0];
                     g_final += ks[1] * specular * pl_color[idx][1];
                     b_final += ks[2] * specular * pl_color[idx][2];
@@ -223,12 +242,18 @@ void shade(float centerX, float centerY, float radius, int shape) {
                     r_final += kd[0] * max(0.0f, cos_theta) * dl_color[idx][0];
                     g_final += kd[1] * max(0.0f, cos_theta) * dl_color[idx][1];
                     b_final += kd[2] * max(0.0f, cos_theta) * dl_color[idx][2];
-                    
+
+		    sp_mod = sp;
+		    
+		    if (as_bool) {
+
+		    }
+
                     // specular part
                     if (shape == SPHERE)
-                        specular = pow(max(0.0f, dl_dir[idx][2]/dl_d_sum + 2*cos_theta*z/radius), sp);
+                        specular = pow(max(0.0f, dl_dir[idx][2]/dl_d_sum + 2*cos_theta*z/radius), sp_mod);
                     else
-                        specular = pow(max(0.0f, cos_theta), sp);
+                        specular = pow(max(0.0f, cos_theta), sp_mod);
                     r_final += ks[0] * specular * dl_color[idx][0];
                     g_final += ks[1] * specular * dl_color[idx][1];
                     b_final += ks[2] * specular * dl_color[idx][2];
