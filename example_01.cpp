@@ -57,9 +57,7 @@ float dl_dir[5][3];
 float dl_color[5][3];
 
 bool an_bool;
-bool as_bool;
 float an[3];
-float as[3];
 
 enum SHAPE { SPHERE, CUBE };
 
@@ -156,11 +154,6 @@ void setPixel(int x, int y, GLfloat r, GLfloat g, GLfloat b) {
   glEnd();
 }*/
 
-// not correct as of now
-float find_ani_sp(int id, float x, float y, float z) {
-    return as[0]*pl_pos[id][1]*z + as[1]*pl_pos[id][2]*x + as[2]*pl_pos[id][0]*y - as[0]*pl_pos[id][2]*y - as[1]*pl_pos[id][0]*z - as[2]*pl_pos[id][1]*x;
-}
-
 void shade(float centerX, float centerY, float radius, int shape) {
     
     glBegin(GL_POINTS);
@@ -183,7 +176,8 @@ void shade(float centerX, float centerY, float radius, int shape) {
             float specular;
 	    float sp_mod;
 	    float refl_dir;
-	    float anisotropic;
+	    float a;
+	    float b;
             
             float dist = sqrt(sqr(x) + sqr(y));            
             if (shape == SPHERE && dist <= radius || shape == CUBE) {
@@ -210,14 +204,17 @@ void shade(float centerX, float centerY, float radius, int shape) {
                     b_final += kd[2] * max(0.0f, cos_theta) * pl_color[idx][2];
 
 		    sp_mod = sp;
-
-		    if (as_bool) {
-			sp_mod = find_ani_sp(idx, radius-x, raidus-y, radius-z);
-		    }
                     // specular part
-                    if (shape == SPHERE)
-			refl_dir = 
+                    if (shape == SPHERE) {
+			if (an_bool) {
+			    a = -pl_d[0]/pl_d_sum + 2*cos_theta*x/radius;
+			    b = -pl_d[1]/pl_d_sum + 2*cos_theta*y/radius;
+			    sp_mod = an[0]*b - an[1]*a;
+			    //printf("%f", sp_mod);
+			    sp_mod = max(sp_mod, 0.0f);
+			}
                         specular = pow(max(0.0f, -pl_d[2]/pl_d_sum + 2*cos_theta*z/radius), sp_mod);
+		    }
                     else
                         specular = pow(max(0.0f, cos_theta), sp_mod);
                     r_final += ks[0] * specular * pl_color[idx][0];
@@ -244,14 +241,16 @@ void shade(float centerX, float centerY, float radius, int shape) {
                     b_final += kd[2] * max(0.0f, cos_theta) * dl_color[idx][2];
 
 		    sp_mod = sp;
-		    
-		    if (as_bool) {
-
-		    }
 
                     // specular part
-                    if (shape == SPHERE)
+                    if (shape == SPHERE) {
+			if (an_bool) {
+			    a = dl_dir[idx][0]/dl_d_sum + 2*cos_theta*x/radius;
+			    b = dl_dir[idx][1]/dl_d_sum + 2*cos_theta*y/radius;
+			    sp_mod = an[0]*b - an[1]*a;
+			}
                         specular = pow(max(0.0f, dl_dir[idx][2]/dl_d_sum + 2*cos_theta*z/radius), sp_mod);
+		    }
                     else
                         specular = pow(max(0.0f, cos_theta), sp_mod);
                     r_final += ks[0] * specular * dl_color[idx][0];
@@ -441,15 +440,15 @@ int windowDump(void)
 {
    int i,j;
    FILE *fptr;
-   //static int counter = 0; /* This supports animation sequences */
-   char fname[32] = "picture.raw";
+   static int counter = 0;
+   char fname[32];
    unsigned char *image;
 
    /* Allocate our buffer for the image */
-   // if ((image = malloc(3*viewport.w*viewport.h*sizeof(char))) == NULL) {
-   //    fprintf(stderr,"Failed to allocate memory for image\n");
-   //    return(0);
-   // }
+   if ((image = (unsigned char*) malloc(3*viewport.w*viewport.h*sizeof(char))) == NULL) {
+      fprintf(stderr,"Failed to allocate memory for image\n");
+      return(0);
+   }
 
    glPixelStorei(GL_PACK_ALIGNMENT,1);
 
@@ -459,9 +458,9 @@ int windowDump(void)
       sprintf(fname,"L_%04d.raw",counter);
    else
 */
-   // sprintf(fname,"C_%04d.raw",counter);
+   sprintf(fname,"C_%04d.raw",counter);
    if ((fptr = fopen(fname,"w")) == NULL) {
-      fprintf(stderr,"Failed to open file for window dump\n");
+      fprintf(stderr,"Failed to open file to save the image\n");
       return(0);
    }
 
@@ -505,7 +504,7 @@ int windowDump(void)
    // }
 
    /* Clean up */
-   //counter++;
+   counter++;
    free(image);
    return(1);
 }
@@ -617,7 +616,13 @@ int main(int argc, char *argv[]) {
                 mul_r[i]   = mul_r[i] * min(viewport.w, viewport.h) / 2;
             }
         }
-        
+	// does really strange things
+	else if (!strcmp(argv[n], "-an")) {
+	    an_bool = true;
+	    an[0] = atof(argv[++n]);
+	    an[1] = atof(argv[++n]);
+	    an[2] = atof(argv[++n]); // ends up not mattering in a sphere
+	}        
     	n++;
     }
 
