@@ -21,10 +21,7 @@ Optional features:
 
 3. -tn: toon shading
 
-4. -an: anisotropic shading
-   usage: -an a_r a_g a_b
-
-5. pressing 's' during execution: save files as "file.jpg"
+4. pressing 's' during execution: save files as "file.jpg"
 
 Example:  
 -kd 0.5 0.5 0.5 -ks 0.5 0.5 0.5 -sp 200 -ka 0.01 0.03 0.01 -pl 1 1 1 0 1 0 -pl 0 -2 -2 1 1 1 -dl -1 -1 -1 0 1 0 -dl 0 -2 -2 1 1 1
